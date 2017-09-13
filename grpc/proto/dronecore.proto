@@ -6,57 +6,60 @@ package dronecorerpc;
 // Interface exported by the server.
 service DroneCoreRPC {
     rpc Arm(Empty) returns(ActionResult) {}
-    rpc TakeOff(Empty) returns(ActionResult) {}
-    rpc Land(Empty) returns(ActionResult) {}
-    rpc SendMission(Mission) returns(MissionResult) {}
-    rpc StartMission(Empty) returns(MissionResult) {}
+    //rpc TakeOff(Empty) returns(ActionResult) {}
+    //rpc Land(Empty) returns(ActionResult) {}
+    //rpc SendMission(Mission) returns(MissionResult) {}
+    //rpc StartMission(Empty) returns(MissionResult) {}
 }
 
 message Empty {}
-
 message ActionResult {
-
-    enum Result {
-        SUCCESS = 0;
-        NO_DEVICE = 1;
-        CONNECTION_ERROR = 2;
-        BUSY = 3;
-        COMMAND_DENIED = 4;
-        COMMAND_DENIED_LANDED_STATE_UNKNOWN = 5;
-        COMMAND_DENIED_NOT_LANDED = 6;
-        TIMEOUT = 7;
-        UNKNOWN = 8;
-    }
-    Result result = 1;
-    string result_str = 2;
+    int32 ok = 1;
 }
 
-message MissionResult {
+//message ActionResult {
+//
+//    enum Result {
+//        SUCCESS = 0;
+//        NO_DEVICE = 1;
+//        CONNECTION_ERROR = 2;
+//        BUSY = 3;
+//        COMMAND_DENIED = 4;
+//        COMMAND_DENIED_LANDED_STATE_UNKNOWN = 5;
+//        COMMAND_DENIED_NOT_LANDED = 6;
+//        TIMEOUT = 7;
+//        UNKNOWN = 8;
+//    }
+//    Result result = 1;
+//    string result_str = 2;
+//}
 
-    enum Result {
-        SUCCESS = 0;
-        ERROR = 1;
-        TOO_MANY_MISSION_ITEMS = 2;
-        BUSY = 3;
-        TIMEOUT = 4;
-        INVALID_ARGUMENT = 5;
-        UNKNOWN = 6;
-    }
-    Result result = 1;
-    string result_str = 2;
-}
-
-message MissionItem {
-    double latitude = 1;
-    double longitude = 2;
-    double altitude = 3;
-    float speed = 4;
-    bool is_fly_through = 5;
-    float pitch = 6;
-    float yaw = 7;
-    int32 camera_action = 8;
-}
-
-message Mission {
-    repeated MissionItem mission_items = 1;
-}
+//message MissionResult {
+//
+//    enum Result {
+//        SUCCESS = 0;
+//        ERROR = 1;
+//        TOO_MANY_MISSION_ITEMS = 2;
+//        BUSY = 3;
+//        TIMEOUT = 4;
+//        INVALID_ARGUMENT = 5;
+//        UNKNOWN = 6;
+//    }
+//    Result result = 1;
+//    string result_str = 2;
+//}
+//
+//message MissionItem {
+//    double latitude = 1;
+//    double longitude = 2;
+//    double altitude = 3;
+//    float speed = 4;
+//    bool is_fly_through = 5;
+//    float pitch = 6;
+//    float yaw = 7;
+//    int32 camera_action = 8;
+//}
+//
+//message Mission {
+//    repeated MissionItem mission_items = 1;
+//}
