@@ -29,10 +29,10 @@ void MavlinkParameters::set_param_async(const std::string &name,
                                         set_param_callback_t callback,
                                         bool extended)
 {
-    // Debug() << "setting param " << name << " to " << value.get_int();
+    // LogDebug() << "setting param " << name << " to " << value.get_int();
 
     if (name.size() > PARAM_ID_LEN) {
-        Debug() << "Error: param name too long";
+        LogErr() << "Error: param name too long";
         if (callback) {
             callback(false);
         }
@@ -54,10 +54,10 @@ void MavlinkParameters::get_param_async(const std::string &name,
                                         get_param_callback_t callback,
                                         bool extended)
 {
-    // Debug() << "getting param " << name << ", extended: " << (extended ? "yes" : "no");
+    // LogDebug() << "getting param " << name << ", extended: " << (extended ? "yes" : "no");
 
     if (name.size() > PARAM_ID_LEN) {
-        Debug() << "Error: param name too long";
+        LogErr() << "Error: param name too long";
         if (callback) {
             ParamValue empty_param;
             callback(false, empty_param);
@@ -127,7 +127,7 @@ void MavlinkParameters::do_work()
         }
 
         if (!_parent->send_message(message)) {
-            Debug() << "Error: Send message failed";
+            LogErr() << "Error: Send message failed";
             if (work.callback) {
                 work.callback(false);
             }
@@ -153,7 +153,7 @@ void MavlinkParameters::do_work()
         char param_id[PARAM_ID_LEN] = {};
         STRNCPY(param_id, work.param_name.c_str(), sizeof(param_id));
 
-        // Debug() << "now getting: " << work.param_name;
+        // LogDebug() << "now getting: " << work.param_name;
 
         mavlink_message_t message = {};
         if (work.extended) {
@@ -166,7 +166,7 @@ void MavlinkParameters::do_work()
                                                     -1);
 
         } else {
-            //Debug() << "request read: "
+            //LogDebug() << "request read: "
             //    << (int)_parent->get_own_system_id() << ":"
             //    << (int)_parent->get_own_component_id() <<
             //    " to "
@@ -183,7 +183,7 @@ void MavlinkParameters::do_work()
         }
 
         if (!_parent->send_message(message)) {
-            Debug() << "Error: Send message failed";
+            LogErr() << "Error: Send message failed";
             if (work.callback) {
                 ParamValue empty_param;
                 work.callback(false, empty_param);
@@ -203,7 +203,7 @@ void MavlinkParameters::do_work()
 
 void MavlinkParameters::process_param_value(const mavlink_message_t &message)
 {
-    // Debug() << "getting param value";
+    // LogDebug() << "getting param value";
 
     mavlink_param_value_t param_value;
     mavlink_msg_param_value_decode(&message, &param_value);
@@ -229,7 +229,7 @@ void MavlinkParameters::process_param_value(const mavlink_message_t &message)
                 }
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _get_param_queue.pop_front();
             }
         }
@@ -251,7 +251,7 @@ void MavlinkParameters::process_param_value(const mavlink_message_t &message)
 
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _set_param_queue.pop_front();
             }
         }
@@ -260,7 +260,7 @@ void MavlinkParameters::process_param_value(const mavlink_message_t &message)
 
 void MavlinkParameters::process_param_ext_value(const mavlink_message_t &message)
 {
-    // Debug() << "getting param ext value";
+    // LogDebug() << "getting param ext value";
     mavlink_param_ext_value_t param_ext_value;
     mavlink_msg_param_ext_value_decode(&message, &param_ext_value);
 
@@ -285,7 +285,7 @@ void MavlinkParameters::process_param_ext_value(const mavlink_message_t &message
                 }
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _get_param_queue.pop_front();
             }
         }
@@ -308,7 +308,7 @@ void MavlinkParameters::process_param_ext_value(const mavlink_message_t &message
 
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _set_param_queue.pop_front();
             }
         }
@@ -318,7 +318,7 @@ void MavlinkParameters::process_param_ext_value(const mavlink_message_t &message
 
 void MavlinkParameters::process_param_ext_ack(const mavlink_message_t &message)
 {
-    // Debug() << "getting param ext ack";
+    // LogDebug() << "getting param ext ack";
 
     mavlink_param_ext_ack_t param_ext_ack;
     mavlink_msg_param_ext_ack_decode(&message, &param_ext_ack);
@@ -344,7 +344,7 @@ void MavlinkParameters::process_param_ext_ack(const mavlink_message_t &message)
 
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _set_param_queue.pop_front();
 
             } else if (param_ext_ack.param_result == PARAM_ACK_IN_PROGRESS) {
@@ -362,7 +362,7 @@ void MavlinkParameters::process_param_ext_ack(const mavlink_message_t &message)
 
                 _state = State::NONE;
                 _parent->unregister_timeout_handler(this);
-                // Debug() << "time taken: " << elapsed_since_s(_last_request_time);
+                // LogDebug() << "time taken: " << elapsed_since_s(_last_request_time);
                 _set_param_queue.pop_front();
             }
 
@@ -388,8 +388,8 @@ void MavlinkParameters::receive_timeout()
             if (work.callback) {
                 ParamValue empty_value;
                 // Notify about timeout
-                Debug() << "Error: get param busy timeout: " << work.param_name;
-                // Debug() << "Got it after: " << elapsed_since_s(_last_request_time);
+                LogErr() << "Error: get param busy timeout: " << work.param_name;
+                // LogDebug() << "Got it after: " << elapsed_since_s(_last_request_time);
                 work.callback(false, empty_value);
             }
             _state = State::NONE;
@@ -405,7 +405,7 @@ void MavlinkParameters::receive_timeout()
 
             if (work.callback) {
                 // Notify about timeout
-                Debug() << "Error: set param busy timeout: " << work.param_name;
+                LogErr() << "Error: set param busy timeout: " << work.param_name;
                 work.callback(false);
             }
             _state = State::NONE;
