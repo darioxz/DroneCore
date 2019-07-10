@@ -695,6 +695,41 @@ public:
         return grpc::Status::OK;
     }
 
+    grpc::Status SetSettingValue(grpc::ServerContext * /* context */,
+                                 const rpc::camera::SetSettingValueRequest *request,
+                                 rpc::camera::SetSettingResponse *response) override
+    {
+        std::promise<void> set_option_called_promise;
+        auto set_option_called_future = set_option_called_promise.get_future();
+
+        if (request == nullptr) {
+            if (response != nullptr) {
+                fillResponseWithResult(response, mavsdk::Camera::Result::WRONG_ARGUMENT);
+            }
+        } else {
+            const std::string setting_id = request->setting().setting_id();
+            uint32_t value = request->setting().value();
+
+            _camera.set_param_async(
+                [this, response, &set_option_called_promise](mavsdk::Camera::Result camera_result) {
+                    if (camera_result == mavsdk::Camera::Result::IN_PROGRESS) {
+                        return;
+                    }
+
+                    if (response != nullptr) {
+                        fillResponseWithResult(response, camera_result);
+                    }
+                    set_option_called_promise.set_value();
+                },
+                setting_id,
+                value);
+
+            set_option_called_future.wait();
+        }
+
+        return grpc::Status::OK;
+    }
+
 private:
     Camera &_camera;
     std::mutex _subscribe_mutex{};

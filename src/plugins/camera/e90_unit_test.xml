@@ -841,6 +841,9 @@
                 </option>
             </options>
         </parameter>
+        <parameter name="CAM_LIVEVIEWBR" type="uint32" default="2000000">
+            <description>Set Camera Liveview Bitrate</description>
+        </parameter>
         <parameter name="CAM_PHOTORATIO" type="uint8" default="1">
             <description>Photo Aspect Ratio</description>
             <updates>

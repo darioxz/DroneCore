@@ -1259,6 +1259,42 @@ void CameraImpl::set_option_async(const std::string &setting_id,
                              true);
 }
 
+void CameraImpl::set_param_async(const std::string &setting_id,
+                                 const uint32_t value,
+                                 const Camera::result_callback_t &callback)
+{
+    if (!_camera_definition) {
+        LogWarn() << "Error: no camera defnition available yet.";
+        if (callback) {
+            callback(Camera::Result::ERROR);
+        }
+        return;
+    }
+
+    MAVLinkParameters::ParamValue mavlink_value;
+    mavlink_value.set_uint32(value);
+
+    _parent->set_param_async(setting_id,
+                             mavlink_value,
+                             [this, callback, setting_id, mavlink_value](MAVLinkParameters::Result result) {
+                                 if (result == MAVLinkParameters::Result::SUCCESS) {
+                                     if (this->_camera_definition) {
+                                         _camera_definition->set_setting(setting_id, mavlink_value);
+                                         refresh_params();
+                                     }
+                                     if (callback) {
+                                         callback(Camera::Result::SUCCESS);
+                                     }
+                                 } else {
+                                     if (callback) {
+                                         callback(Camera::Result::ERROR);
+                                     }
+                                 }
+                             },
+                             this,
+                             true);
+}
+
 Camera::Result CameraImpl::get_option(const std::string &setting_id, Camera::Option &option)
 {
     auto prom = std::make_shared<std::promise<Camera::Result>>();

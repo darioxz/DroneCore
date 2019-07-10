@@ -528,6 +528,17 @@ public:
                           const Camera::Option &option);
 
     /**
+     * @brief Set a value of a setting (asynchronous).
+     *
+     * @param setting_id The machine readable name of the setting.
+     * @param value The machine readable value.
+     * @param callback The callback to get the result.
+     */
+    void set_param_async(const result_callback_t &callback,
+                         const std::string &setting_id,
+                         const uint32_t value);
+
+    /**
      * @brief Callback type to get the currently selected settings.
      */
     typedef std::function<void(const std::vector<Setting>)> subscribe_current_settings_callback_t;

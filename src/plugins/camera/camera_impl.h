@@ -58,6 +58,10 @@ public:
                           const Camera::Option &option,
                           const Camera::result_callback_t &callback);
 
+    void set_param_async(const std::string &setting_id,
+                         const uint32_t value,
+                         const Camera::result_callback_t &callback);
+
     Camera::Result get_option(const std::string &setting_id, Camera::Option &option);
     void get_option_async(const std::string &setting_id,
                           const Camera::get_option_callback_t &callback);

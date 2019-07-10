@@ -29,6 +29,10 @@ public:
                        void(Camera::result_callback_t,
                             const std::string &,
                             const Camera::Option)){};
+    MOCK_CONST_METHOD3(set_param_async,
+                       void(Camera::result_callback_t,
+                            const std::string &,
+                            const uint32_t)){};
 };
 
 } // namespace testing

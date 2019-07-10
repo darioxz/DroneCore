@@ -134,6 +134,13 @@ void Camera::set_option_async(const result_callback_t &callback,
     _impl->set_option_async(setting_id, option, callback);
 }
 
+void Camera::set_param_async(const result_callback_t &callback,
+                             const std::string &setting_id,
+                             const uint32_t value)
+{
+    _impl->set_param_async(setting_id, value, callback);
+}
+
 Camera::Result Camera::get_option(const std::string &setting_id, Option &option)
 {
     return _impl->get_option(setting_id, option);

@@ -924,6 +924,14 @@
         <parameter name="CAM_SPOTAREA" type="uint16" control="0" default="0">
             <description>Spot Metering Area</description>
         </parameter>
+        <parameter name="CAM_LIVEVIEWBR" type="uint32" control="0" default="2000000">
+            <description>Set Camera Liveview Bitrate</description>
+        </parameter>
+            <!-- <options> default="2000000"
+                <option name="Low" value="500000" />
+                <option name="Medium" value="1000000" />
+                <option name="High" value="2000000" />
+            </options> -->
         <!--
             Video stream aspect ratio
             Float value is width / height (i.e. 3:2 = 1.5)
